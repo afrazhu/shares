@@ -35,13 +35,13 @@ $content = getContentByCurl($url);
 $ptn = '/\\"(.*)\\"/'; 
 preg_match_all($ptn,$content,$match);
 $arr = explode(',',$match[1][0]);
-$conn = mysql_connect('127.0.0.1','root',123456) or die('connect failed.  '.mysql_error());
-mysql_query("SET NAMES 'UTF8'");
+$conn = mysqli_connect('127.0.0.1','root',123456,'test');
+mysqli_query($conn, "SET NAMES 'UTF8'");
 $arr[0]= iconv("GBK", "UTF-8", $arr[0]); 
-mysql_select_db('test',$conn);
+//mysql_select_db('test',$conn);
 $sql = "insert into code_today (code_num,code_name,start_price,yesterday_price,now_price,today_max_price,today_min_price,vie_buy_price,vie_sell_price,deal_code_num,deal_code_money,buy_one_num,buy_one_price,buy_two_num,buy_two_price,buy_three_num,buy_three_price,buy_four_num,buy_four_price,buy_five_num,buy_five_price,sell_one_num,sell_one_price,sell_two_num,sell_two_price,sell_three_num,sell_three_price,sell_four_num,sell_four_price,sell_five_num,sell_five_price,date,time,other) values ('".$code."','".$arr[0]."',".$arr[1].",".$arr[2].",".$arr[3].",".$arr[4].",".$arr[5].",".$arr[6].",".$arr[7].",".$arr[8].",".$arr[9].",".$arr[10].",".$arr[11].",".$arr[12].",".$arr[13].",".$arr[14].",".$arr[15].",".$arr[16].",".$arr[17].",".$arr[18].",".$arr[19].",".$arr[20].",".$arr[21].",".$arr[22].",".$arr[23].",".$arr[24].",".$arr[25].",".$arr[26].",".$arr[27].",".$arr[28].",".$arr[29].",'".$arr[30]."','".$arr[31]."','".$arr[32]."')";
-mysql_query($sql);
-mysql_close($conn);
+mysqli_query($conn,$sql);
+mysqli_close($conn);
 
 
 

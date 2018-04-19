@@ -1,7 +1,7 @@
 <?php
-$conn = mysql_connect('127.0.0.1','root',123456) or die('connect failed '.mysql_close());
-mysql_query("SET NAMES 'UTF8'");
-mysql_select_db('test',$conn);
+$conn = mysqli_connect('127.0.0.1','root',123456,'test');
+mysqli_query($conn,"SET NAMES 'UTF8'");
+//mysql_select_db('test',$conn);
 for($i=0;$i<59;$i++){
 	$sql = "CREATE TABLE `code_history".$i."` ( ";
   	$sql .=	"`id` int(11) NOT NULL AUTO_INCREMENT,";
@@ -20,7 +20,7 @@ for($i=0;$i<59;$i++){
   	$sql .=	"KEY `code` (`code`) USING BTREE,";
   	$sql .=	"KEY `low` (`low_price`) USING BTREE";
 	$sql .=	" ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-	mysql_query($sql);
+	mysqli_query($conn, $sql);
 }
 echo "ok";
-mysql_close($conn);
+mysqli_close($conn);

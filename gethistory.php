@@ -28,13 +28,13 @@ function getContentByCurl($url, $headers=array(), $binary=false ) {
 	return $contents;
 }
 //获取所有股票代码
-$conn = mysql_connect('127.0.0.1','root',123456) or die('connect failed '.mysql_error());
-mysql_select_db('test',$conn);
+$conn = mysqli_connect('127.0.0.1','root',123456,'test');
+//mysql_select_db('test',$conn);
 //echo "<pre>";
-$res = mysql_query('select id,code,type from code_num order by ord');
+$res = mysqli_query($conn,'select id,code,code_type from code_num order by ord');
 $arr_code = array();
 $i = 0;
-while($arr = mysql_fetch_array($res,MYSQL_NUM)){
+while($arr = mysqli_fetch_array($res,MYSQLI_NUM)){
 	$arr_code[$i]['id'] = $arr[0];
 	$arr_code[$i]['code'] = $arr[1];
 	$arr_code[$i]['type'] = $arr[2];
@@ -45,6 +45,7 @@ $i = 0;
 foreach ($arr_code as $k => $val) {
 	$url = 'http://table.finance.yahoo.com/table.csv?s='.$val['code'].'.'.$val['type'];
 	$content = getContentByCurl($url);
+    print_r($content);die;
 	$arr_inter = explode(';',str_replace("\n",";",trim($content)));
 	unset($arr_inter[0]);
 	if($arr_inter){
@@ -55,10 +56,10 @@ foreach ($arr_code as $k => $val) {
 		foreach ($arr_inter as $v) {
 			$arr_v = explode(',',trim($v));
 			$sql = "insert into ".$table_name." (code_id,code,type,open_price,high_price,low_price,close_price,volume_num,adj_close,date) values (".$val['id'].",'".$val['code']."','".$val['type']."',".$arr_v[1].",".$arr_v[2].",".$arr_v[3].",".$arr_v[4].",'".$arr_v[5]."',".$arr_v[6].",'".$arr_v[0]."')";
-			mysql_query($sql);
+			mysqli_query($conn,$sql);
 		}
 		$i++;
 	}
 }
 //关闭
-mysql_close($conn);
+mysqli_close($conn);
